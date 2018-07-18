@@ -108,3 +108,25 @@ legend = ax[0].legend(loc = 'best', shadow = True)
 ax[1].plot(history.history['acc'], color = 'b', label = 'Training accuracy')
 ax[1].plot(history.history['val_acc'], color = 'r', label = 'Validation accuracy')
 legend = ax[1].legend(loc = 'best', shadow = True)
+
+
+# plot confusion matrix
+def plot_confusion_matrix(cm, classes, normalize = False, title = 'Confusion Matrix', cmap = plt.cm.Blues):
+    plt.imshow(cm, interpolation = 'nearest', cmap = cmap)
+    plt.title(title)
+    plt.colorbar()
+    ticks = np.arrange(len(classes))
+    plt.xticks(ticks, classes, rotation = 45)
+    plt.yticks(ticks, classes)
+
+    if normalize:
+        cm = cm.astype('float') / cm.sum(axis = 1)[:, np.newaxis]
+
+    threshold = cm.max() / 2
+
+    for i, j in itertools.product(range(cm.shape[0]), range(cm.shape[1])):
+        plt.text(j, i, cm[i, j], horizontalalignment = 'center', color = 'white' if cm[i,j] > threshold else 'black')
+        plt.tight_layout()
+        plt.ylabel('True label')
+        plt.xlabel('Predicted label')
+
