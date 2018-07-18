@@ -58,7 +58,7 @@ model = Sequential([
     Dropout(rate = 0.25), 
     Conv2D(64, (3,3), padding = 'Same', activation = 'relu'), 
     Conv2D(64, (3,3), padding = 'Same', activation = 'relu'), 
-    MaxPool2D(stides = (2,2)), 
+    MaxPool2D(strides = (2,2)), 
     Dropout(rate = 0.25), 
     Flatten(), 
     Dense(256, activation = 'relu'), 
@@ -93,10 +93,18 @@ datagen = ImageDataGenerator(featurewise_center = False,
                              vertical_flip = False)
 
 # fit model
-history = model.fit(datagen.flow(x_train, y_train, batch_size = BATCH_SIZE), 
+generator = datagen.flow(x_train, y_train, BATCH_SIZE)
+history = model.fit_generator(generator, 
                     epochs = NUM_EPOCHS, 
                     validation_data = (x_val, y_val), 
                     steps_per_epoch = x_train.shape[0] // BATCH_SIZE, 
                     callbacks = [learning_rate_reduction], 
                     verbose = 2)
 
+fig, ax = plt.subplots(2, 1)
+ax[0].plot(history.history['loss'], color = 'b', label = 'Training loss')
+ax[0].plot(history.history['val_loss'], color = 'r', label = 'Validation loss', axes = ax[0])
+legend = ax[0].legend(loc = 'best', shadow = True)
+ax[1].plot(history.history['acc'], color = 'b', label = 'Training accuracy')
+ax[1].plot(history.history['val_acc'], color = 'r', label = 'Validation accuracy')
+legend = ax[1].legend(loc = 'best', shadow = True)
