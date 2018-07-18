@@ -76,5 +76,27 @@ learning_rate_reduction = ReduceLROnPlateau(monitor = 'val_acc',
                                             min_lr = 0.00001, 
                                             verbose = 1)
 
-NUM_EPOCHS = 1
+NUM_EPOCHS = 2
 BATCH_SIZE = 86
+
+# data augmentation
+datagen = ImageDataGenerator(featurewise_center = False, 
+                             samplewise_center = False, 
+                             featurewise_std_normalization = False, 
+                             samplewise_std_normalization = False, 
+                             zca_whitening = False, 
+                             rotation_range = 10, 
+                             zoom_range = 0.1, 
+                             width_shift_range = 0.1, 
+                             height_shift_range = 0.1, 
+                             horizontal_flip = False, 
+                             vertical_flip = False)
+
+# fit model
+history = model.fit(datagen.flow(x_train, y_train, batch_size = BATCH_SIZE), 
+                    epochs = NUM_EPOCHS, 
+                    validation_data = (x_val, y_val), 
+                    steps_per_epoch = x_train.shape[0] // BATCH_SIZE, 
+                    callbacks = [learning_rate_reduction], 
+                    verbose = 2)
+
