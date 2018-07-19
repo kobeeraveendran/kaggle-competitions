@@ -9,7 +9,7 @@ import itertools
 
 from keras.utils import to_categorical
 from keras.models import Sequential
-from keras.layers import Flatten, Conv2D, MaxPool2D,Dense, Dropout
+from keras.layers import Flatten, Conv2D, MaxPool2D, Dense, Dropout
 from keras.optimizers import RMSprop
 from keras.preprocessing.image import ImageDataGenerator
 from keras.callbacks import ReduceLROnPlateau
@@ -115,7 +115,7 @@ def plot_confusion_matrix(cm, classes, normalize = False, title = 'Confusion Mat
     plt.imshow(cm, interpolation = 'nearest', cmap = cmap)
     plt.title(title)
     plt.colorbar()
-    ticks = np.arrange(len(classes))
+    ticks = np.arange(len(classes))
     plt.xticks(ticks, classes, rotation = 45)
     plt.yticks(ticks, classes)
 
@@ -129,4 +129,10 @@ def plot_confusion_matrix(cm, classes, normalize = False, title = 'Confusion Mat
         plt.tight_layout()
         plt.ylabel('True label')
         plt.xlabel('Predicted label')
+
+y_pred = model.predict(x_val)
+y_pred_classes = np.argmax(y_pred, axis = 1)
+y_true =np.argmax(y_val, axis = 1)
+confusion_mtx = confusion_matrix(y_true, y_pred_classes)
+plot_confusion_matrix(confusion_mtx, classes = range(10))
 
