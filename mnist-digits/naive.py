@@ -55,7 +55,13 @@ kaggle_test = pd.read_csv('dataset/test.csv')
 kaggle_test = kaggle_test.values.reshape((-1, 28, 28))
 
 predictions = model.predict(kaggle_test)
-print('Prediction for image 3: ' + str(np.argmax(predictions[4])))
+print('Prediction for image 5: ' + str(np.argmax(predictions[4])))
 
+submission = open('submission.csv', 'w')
 
+# prepare submission file for Kaggle
+submission.write('ImageId,Label')
+for i in range(1, len(predictions) + 1):
+    submission.write('\n' + str(i) + ',' + str(np.argmax(predictions[i - 1])))
 
+submission.close()
