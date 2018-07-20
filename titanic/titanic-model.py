@@ -102,4 +102,15 @@ plt.title('Pearson correlation of features', y = 1.05, size = 15)
 sns.heatmap(data = train.astype(float).corr(), linewidths = 0.1, vmax = 1.0, 
             square = True, cmap = colormap, linecolor = 'white', annot = True)
 
+# singular matrix e - debug
+
+graph = sns.pairplot(train[[u'Survived', u'Pclass', u'Sex', u'Age', u'Parch', u'Fare', u'Embarked', u'FamilySize', u'Title']], 
+                     hue = 'Survived', 
+                     palette = 'seismic',
+                     height = 1.2, 
+                     diag_kind = 'kde', 
+                     diag_kws = dict(shade = True), 
+                     plot_kws = dict(s = 10))
+graph.set(xticklabels = [])
+
 plt.show()
