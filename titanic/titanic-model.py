@@ -92,6 +92,14 @@ train = train.drop(labels = ['CategoricalAge', 'CategoricalFare', 'PassengerId',
 test = test.drop(labels = ['PassengerId', 'Name', 'SibSp', 'Cabin', 'Ticket'], axis = 1)
 
 
-print(train.head())
-print('\n\n\n\n')
-print(test.head())
+#print(train.head())
+#print('\n\n\n\n')
+#print(test.head())
+
+colormap = plt.cm.RdBu
+plt.figure(figsize = (14, 12))
+plt.title('Pearson correlation of features', y = 1.05, size = 15)
+sns.heatmap(data = train.astype(float).corr(), linewidths = 0.1, vmax = 1.0, 
+            square = True, cmap = colormap, linecolor = 'white', annot = True)
+
+plt.show()
