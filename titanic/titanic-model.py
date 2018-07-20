@@ -3,6 +3,10 @@ from keras.models import Sequential
 from keras.layers import Dense, Flatten
 import matplotlib.pyplot as plt
 import pandas as pd
+import re
+import sklearn
+import seaborn as sns
+import xgboost
 
 train = pd.read_csv('dataset/train.csv')
 test = pd.read_csv('dataset/test.csv')
@@ -12,6 +16,9 @@ passenger_id = test['PassengerId']
 
 train['Has_Cabin'] = train['Cabin'].apply(lambda x: 0 if type(x) == float else 1)
 test['Has_Cabin'] = test['Cabin'].apply(lambda x: 0 if type(x) == float else 1)
+train['Name_length'] = train['Name'].apply(len)
+test['Name_length'] = test['Name'].apply(len)
+
 
 full_data = [train, test]
 
@@ -26,6 +33,8 @@ for dataset in full_data:
     dataset['IsAlone'] = 0
     dataset.loc[dataset['FamilySize'] == 1, 'IsAlone'] = 1
 
+    dataset['Embarked'] = dataset['Embarked'].fillna('S')
+
     dataset['Fare'] = dataset['Fare'].fillna(train['Fare'].median())
 
     age_avg = dataset['Age'].mean()
@@ -38,5 +47,7 @@ for dataset in full_data:
 train['CategoricalFare'] = pd.cut(train['Fare'], 4)
 train['CategoricalAge'] = pd.cut(train['Age'], 5)
 
+def remove_title(name):
+    title_search = 
 
-train = train.drop(labels = ['Name', 'SibSp', 'Ticket'], axis = 1)
+train = train.drop(labels = ['PassengerId', 'Name', 'SibSp', 'Cabin', 'Ticket'], axis = 1)
