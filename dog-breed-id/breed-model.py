@@ -1,8 +1,10 @@
 import cv2
 import matplotlib.pyplot as plt
+import keras
 from keras.applications.resnet50 import ResNet50
 from keras.applications.resnet50 import preprocess_input, decode_predictions
 from keras.preprocessing import image
+from keras.models import Sequential
 from tqdm import tqdm
 import numpy as np
 
@@ -46,3 +48,10 @@ bottleneck_features = np.load('bottleneck_features/DogResnet50Data.npz')
 train_DogResnet50 = bottleneck_features['train']
 valid_DogResnet50 = bottleneck_features['valid']
 test_DogResnet50 = bottleneck_features['test']
+
+# define model, adding a few layers to ResNet
+Resnet50_model = Sequential()
+Resnet50_model.add(keras.layers.GlobalAveragePooling2D(input_shape = train_DogResnet50.shape[1:]))
+Resnet50_model.add(keras.layers.Dense(133, activation = 'softmax'))
+
+Resnet50_model.summary()
