@@ -279,10 +279,10 @@ et_features = extra_tree.feature_importances(train_data, train_labels)
 ada_features = adaboost.feature_importances(train_data, train_labels)
 gb_features = gradient_boosting.feature_importances(train_data, train_labels)
 
-print('Random forest feature importance: ' + str(rf_features))
-print('Extra trees feature importance: ' + str(et_features))
-print('AdaBoost feature importance: ' + str(ada_features))
-print('Gradient boosting feature importance: ' + str(gb_features))
+#print('Random forest feature importance: ' + str(rf_features))
+#print('Extra trees feature importance: ' + str(et_features))
+#print('AdaBoost feature importance: ' + str(ada_features))
+#print('Gradient boosting feature importance: ' + str(gb_features))
 
 # plot feature importances
 cols = train.columns.values
@@ -294,6 +294,7 @@ feature_dataframe = pd.DataFrame({'features': cols,
                                   'Gradient Boosting feature importances': gb_features
                                   })
 
+# random forest feature importance scatter
 trace = go.Scatter(
     y = feature_dataframe['Random Forest feature importances'].values, 
     x = feature_dataframe['features'].values, 
@@ -326,6 +327,7 @@ layout = go.Layout(
 fig = go.Figure(data = data, layout = layout)
 py.plot(fig, filename = 'rf_scatter.html')
 
+# extra trees feature importance scatter
 trace = go.Scatter(
     y = feature_dataframe['Extra Trees feature importances'].values, 
     x = feature_dataframe['features'].values, 
@@ -357,6 +359,7 @@ layout = go.Layout(
 fig = go.Figure(data = data, layout = layout)
 py.plot(fig, filename = 'et_scatter.html')
 
+# adaboost feature importance scatter
 trace = go.Scatter(
     y = feature_dataframe['AdaBoost feature importances'].values, 
     x = feature_dataframe['features'].values, 
@@ -389,6 +392,7 @@ layout = go.Layout(
 fig = go.Figure(data = data, layout = layout)
 py.plot(fig, filename = 'ada_scatter.html')
 
+# gradient boosting feature importance scatter
 trace = go.Scatter(
     y = feature_dataframe['Gradient Boosting feature importances'].values, 
     x = feature_dataframe['features'].values, 
@@ -420,3 +424,7 @@ layout = go.Layout(
 
 fig = go.Figure(data = data, layout = layout)
 py.plot(fig, filename = 'gb_scatter.html')
+
+# put avg. of feature importances in df
+feature_dataframe['mean'] = feature_dataframe.mean(axis = 1)
+print(feature_dataframe.head(10))
