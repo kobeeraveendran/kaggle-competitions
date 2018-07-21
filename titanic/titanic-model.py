@@ -199,8 +199,30 @@ gb_params = {
 }
 
 # SVM
-svc_params = {
+svm_params = {
     'kernel': 'linear', 
     'C': 0.025
 }
 
+# create objects for each model
+# random forest, extra tree, adaboost, gradient boosting, svm
+
+random_forest = SklearnHelper(clf = RandomForestClassifier, 
+                   seed = SEED, 
+                   params = rf_params)
+
+extra_tree = SklearnHelper(clf = ExtraTreesClassifier, 
+                           seed = SEED, 
+                           params = et_params)
+
+adaboost = SklearnHelper(clf = AdaBoostClassifier, 
+                         seed = SEED, 
+                         params = ada_params)
+
+gradient_boosting = SklearnHelper(clf = GradientBoostingClassifier, 
+                                seed = SEED, 
+                                params = gb_params)
+
+svm = SklearnHelper(clf = SVC, 
+                    seed = SEED, 
+                    params = svm_params)
