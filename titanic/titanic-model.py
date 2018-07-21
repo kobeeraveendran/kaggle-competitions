@@ -8,6 +8,7 @@ import sklearn
 import seaborn as sns
 import xgboost as xgb
 import plotly.graph_objs as go
+import plotly.offline as py
 import plotly.tools as tls
 from sklearn.ensemble import RandomForestClassifier, AdaBoostClassifier, GradientBoostingClassifier, ExtraTreesClassifier
 from sklearn.svm import SVC
@@ -302,6 +303,38 @@ trace = go.Scatter(
         sizeref = 1, 
         size = 25, 
         color = feature_dataframe['Random Forest feature importances'].values, 
+        colorscale = 'Portland', 
+        showscale = True
+    ), 
+    text = feature_dataframe['features'].values
+)
+
+data = [trace]
+
+layout = go.Layout(
+    autosize = True, 
+    title = 'Random Forest Feature Importance', 
+    hovermode = 'closest', 
+    yaxis = dict(
+        title = 'Feature Importance', 
+        ticklen = 5, 
+        gridwith = 2
+    ), 
+    showlegend = False
+)
+
+fig = go.Figure(data = data, layout = layout)
+py.iplot(fig, filename = 'scatter1')
+
+trace = go.Scatter(
+    y = feature_dataframe['Extra Trees feature importances'].values, 
+    x = feature_dataframe['features'].values, 
+    mode = 'markers', 
+    marker = dict(
+        sizemode = 'diameter', 
+        sizeref = 1, 
+        size = 5, 
+        color = feature_dataframe['Extra Trees feature importance'].values, 
         colorscale = 'Portland', 
         showscale = True
     ), 
