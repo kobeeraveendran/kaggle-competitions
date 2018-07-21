@@ -143,3 +143,21 @@ class SklearnHelper(object):
     def feature_importances(self, x, y):
         print(self.clf.fit(x, y).feature_importances_)
 
+# out-of-fold predictions
+def get_oof(clf, train_data, train_labels, test_data):
+    oof_train = np.zeros((train_size,))
+    oof_test = np.zeros((test_size,))
+    oof_test_skf = np.empty((NUM_FOLDS, test_size))
+
+    for i, (train_index, test_index) in enumerate(kf):
+        x_tr = train_data[train_index]
+        y_tr = train_labels[train_index]
+        x_te = test_data[test_index]
+
+        clf.train(x_tr, y_tr)
+        oof_train[test_index] = clf.predict(x_te)
+        oof_test_skf[i, :] = clf.predict(test_data)
+
+    oof_test[:] = oof_test_skf.mean(axis = 0)
+
+    return oof_train.reshape(-1, 1), oof_test.reshape(-1, 1)
