@@ -233,3 +233,41 @@ train = train.drop(['Survived'], axis = 1)
 train_data = train.values
 test_data = test.values
 
+
+# first-level predicitions
+et_oof_train, et_oof_test = get_oof(extra_tree, 
+                                    train_data, 
+                                    train_labels, 
+                                    test_data)
+
+print('Extra trees clf training complete')
+
+rf_oof_train, rf_oof_test = get_oof(random_forest, 
+                                    train_data, 
+                                    train_labels, 
+                                    test_data)
+
+print('Random forest clf training complete')
+
+ada_oof_train, ada_oof_test = get_oof(adaboost, 
+                                      train_data, 
+                                      train_labels, 
+                                      test_data)
+
+print('AdaBoost clf training complete')
+
+gb_oof_train, gb_oof_test = get_oof(gradient_boosting, 
+                                    train_data, 
+                                    train_labels, 
+                                    test_data)
+
+print('Gradient boosting clf training complete')
+
+svm_oof_train, svm_oof_test = get_oof(svm, 
+                                      train_data, 
+                                      train_labels, 
+                                      test_data)
+
+print('SVM training complete')
+
+print('Level 1 Training complete')
