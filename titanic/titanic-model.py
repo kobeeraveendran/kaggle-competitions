@@ -428,3 +428,34 @@ py.plot(fig, filename = 'gb_scatter.html')
 # put avg. of feature importances in df
 feature_dataframe['mean'] = feature_dataframe.mean(axis = 1)
 print(feature_dataframe.head(10))
+
+y = feature_dataframe['mean'].values
+x = feature_dataframe['features'].values
+
+data = [go.Bar(
+    x = x, 
+    y = y, 
+    width = 0.5, 
+    marker = dict(
+        color = feature_dataframe['mean'].values, 
+        colorscale = 'Portland', 
+        showscale = True, 
+        reversescale = False
+    ), 
+    opacity = 0.6
+)]
+
+layout = go.Layout(
+    autosize = True, 
+    title = 'Barplot of Mean Feature Importance', 
+    hovermode = 'closest', 
+    yaxis = dict(
+        title = 'Feature Importance', 
+        ticklen = 5, 
+        gridwidth = 2
+    ), 
+    showlegend = False
+)
+
+fig = go.Figure(data = data, layout = layout)
+py.iplot(fig, filename = 'bar_feature_importance.html')
