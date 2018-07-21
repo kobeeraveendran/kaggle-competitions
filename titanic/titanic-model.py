@@ -502,3 +502,10 @@ gbm = xgb.XGBClassifier(
 ).fit(train_data, train_labels)
 
 predictions = gbm.predict(test_data)
+
+# prepare submission file
+submission = pd.DataFrame({
+    'PassengerId': passenger_id, 
+    'Survived': predictions
+})
+submission.to_csv('submission.csv', index = False)
