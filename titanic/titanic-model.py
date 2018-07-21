@@ -324,7 +324,7 @@ layout = go.Layout(
 )
 
 fig = go.Figure(data = data, layout = layout)
-py.plot(fig, filename = 'rf_scatter')
+py.plot(fig, filename = 'rf_scatter.html')
 
 trace = go.Scatter(
     y = feature_dataframe['Extra Trees feature importances'].values, 
@@ -355,7 +355,7 @@ layout = go.Layout(
     showlegend = False
 )
 fig = go.Figure(data = data, layout = layout)
-py.plot(fig, filename = 'et_scatter')
+py.plot(fig, filename = 'et_scatter.html')
 
 trace = go.Scatter(
     y = feature_dataframe['AdaBoost feature importances'].values, 
@@ -387,4 +387,36 @@ layout = go.Layout(
 )
 
 fig = go.Figure(data = data, layout = layout)
-py.plot(fig, filename = 'ada_scatter')
+py.plot(fig, filename = 'ada_scatter.html')
+
+trace = go.Scatter(
+    y = feature_dataframe['Gradient Boosting feature importances'].values, 
+    x = feature_dataframe['features'].values, 
+    mode = 'markers', 
+    marker = dict(
+        sizemode = 'diameter', 
+        sizeref = 1, 
+        size = 25, 
+        color = feature_dataframe['Gradient Boosting feature importances'].values, 
+        colorscale = 'Portland', 
+        showscale = True
+    ), 
+    text = feature_dataframe['features'].values
+)
+
+data = [trace]
+
+layout = go.Layout(
+    autosize = True, 
+    title = 'Gradient Boosting Feature Importance', 
+    hovermode = 'closest', 
+    yaxis = dict(
+        title = 'Feature Importance', 
+        ticklen = 5, 
+        gridwidth = 2
+    ), 
+    showlegend = False
+)
+
+fig = go.Figure(data = data, layout = layout)
+py.plot(fig, filename = 'gb_scatter.html')
