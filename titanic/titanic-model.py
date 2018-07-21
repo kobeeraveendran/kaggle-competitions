@@ -9,6 +9,9 @@ import seaborn as sns
 import xgboost as xgb
 import plotly.graph_objs as go
 import plotly.tools as tls
+from sklearn.ensemble import RandomForestClassifier, AdaBoostClassifier, GradientBoostingClassifier, ExtraTreesClassifier
+from sklearn.svm import SVC
+from sklearn.cross_validation import KFold
 
 train = pd.read_csv('dataset/train.csv')
 test = pd.read_csv('dataset/test.csv')
@@ -103,7 +106,7 @@ sns.heatmap(data = train.astype(float).corr(), linewidths = 0.1, vmax = 1.0,
             square = True, cmap = colormap, linecolor = 'white', annot = True)
 
 # singular matrix e - debug
-
+'''
 graph = sns.pairplot(train[[u'Survived', u'Pclass', u'Sex', u'Age', u'Parch', u'Fare', u'Embarked', u'FamilySize', u'Title']], 
                      hue = 'Survived', 
                      palette = 'seismic',
@@ -112,5 +115,31 @@ graph = sns.pairplot(train[[u'Survived', u'Pclass', u'Sex', u'Age', u'Parch', u'
                      diag_kws = dict(shade = True), 
                      plot_kws = dict(s = 10))
 graph.set(xticklabels = [])
-
+'''
 plt.show()
+
+# useful constants
+train_size = train.shape[0]
+test_size = test.shape[0]
+SEED = 0
+NUM_FOLDS = 5
+kf = KFold(n = train_size, n_folds = NUM_FOLDS, random_state = SEED)
+
+# helper class for sklearn functions
+class SklearnHelper(object):
+    def __init__(self, clf, seed = 0, params = None):
+        params['ranodm_state'] = seed
+        self.clf = clf(**params)
+
+    def train(self, train_data, train_labels):
+        self.clf.fit(train_data, train_labels)
+
+    def predict(self, data):
+        return self.clf.predict(data)
+
+    def fit(self, x, y):
+        return self.clf.fit(x, y)
+
+    def feature_importances(self, x, y):
+        print(self.clf.fit(x, y).feature_importances_)
+
