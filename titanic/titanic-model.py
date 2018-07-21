@@ -89,7 +89,7 @@ for dataset in full_data:
     dataset.loc[dataset['Age'] > 64, 'Age'] = 4
     dataset['Age'] = dataset['Age'].astype(int)
 
-train['CategoricalFare'] = pd.qcut(train['Fare'], 4)
+train['CategoricalFare'] = pd.cut(train['Fare'], 4)
 train['CategoricalAge'] = pd.cut(train['Age'], 5)
 
 train = train.drop(labels = ['CategoricalAge', 'CategoricalFare', 'PassengerId', 'Name', 'SibSp', 'Cabin', 'Ticket'], axis = 1)
@@ -324,7 +324,7 @@ layout = go.Layout(
 )
 
 fig = go.Figure(data = data, layout = layout)
-py.iplot(fig, filename = 'scatter1')
+py.plot(fig, filename = 'rf_scatter')
 
 trace = go.Scatter(
     y = feature_dataframe['Extra Trees feature importances'].values, 
@@ -334,7 +334,7 @@ trace = go.Scatter(
         sizemode = 'diameter', 
         sizeref = 1, 
         size = 5, 
-        color = feature_dataframe['Extra Trees feature importance'].values, 
+        color = feature_dataframe['Extra Trees feature importances'].values, 
         colorscale = 'Portland', 
         showscale = True
     ), 
@@ -355,5 +355,36 @@ layout = go.Layout(
     showlegend = False
 )
 fig = go.Figure(data = data, layout = layout)
-py.iplot(fig, filename = 'scatter2')
+py.plot(fig, filename = 'et_scatter')
 
+trace = go.Scatter(
+    y = feature_dataframe['AdaBoost feature importances'].values, 
+    x = feature_dataframe['features'].values, 
+    mode = 'markers', 
+    marker = dict(
+        sizemode = 'diameter', 
+        sizeref = 1, 
+        size = 25, 
+        color = feature_dataframe['AdaBoost feature importances'].values, 
+        colorscale = 'Portland', 
+        showscale = True
+    ), 
+    text = feature_dataframe['features'].values
+)
+
+data = [trace]
+
+layout = go.Layout(
+    autosize = True, 
+    title = 'AdaBoost Feature Importance', 
+    hovermode = 'closest', 
+    yaxis = dict(
+        title = 'Feature Importance', 
+        ticklen = 5, 
+        gridwidth = 2
+    ), 
+    showlegend = False
+)
+
+fig = go.Figure(data = data, layout = layout)
+py.plot(fig, filename = 'ada_scatter')
