@@ -123,3 +123,6 @@ def dog_breed_predictor(img_path):
 	else:
 		print('Unsure of what this is.')
 
+# test predictor
+dog_breed_predictor('dataset/dogImages/test/001.Affenpinscher/Affenpinscher_00003.jpg')
+dog_breed_predictor('dataset/humanImages/lfw/lfw/Aaron_Eckhart/Aaron_Eckhart_0001.jpg')
