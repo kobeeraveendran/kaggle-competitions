@@ -5,6 +5,7 @@ from keras.applications.resnet50 import ResNet50
 from keras.applications.resnet50 import preprocess_input, decode_predictions
 from keras.preprocessing import image
 from keras.models import Sequential
+from keras.utils import load_files
 from tqdm import tqdm
 import numpy as np
 
@@ -43,6 +44,18 @@ def dog_detector(img_path):
 
 # breed prediction CNN
 
+# load datasets
+def load_dataset(path):
+	data = load_files(path)
+	dog_files = np.array(data['filenames'])
+	dog_targets = np.utils.to_categorical(np.array(data['target']), 133)
+
+	return dog_files, dog_targets
+
+train_files, train_targets = load_dataset('dogImages/train')
+valid_files, valid_targets = load_dataset('dogImages/valid')
+test_files, test_targets = load_dataset('dogImages/test')
+
 # extract bottleneck features
 bottleneck_features = np.load('bottleneck_features/DogResnet50Data.npz')
 train_DogResnet50 = bottleneck_features['train']
@@ -55,3 +68,17 @@ Resnet50_model.add(keras.layers.GlobalAveragePooling2D(input_shape = train_DogRe
 Resnet50_model.add(keras.layers.Dense(133, activation = 'softmax'))
 
 Resnet50_model.summary()
+
+Resnet50_model.compile(optimizer = 'rmsprop', 
+					   loss = 'categorical_crossentropy', 
+					   metrics = ['accuracy'])
+
+checkpoint = keras.callbacks.ModelCheckpoint(
+		'saved_models/weights.best.ResNet50.hdf5', 
+		verbose = 1, 
+		save_best_only = True
+)
+
+Resnet50_model.fit(train_DogResnet50, train_targets, 
+	validation_data = (valid_DogResnet50, valid_targets), 
+	epochs = 20, batch_size = 20, callbacks = [checkpoint])
