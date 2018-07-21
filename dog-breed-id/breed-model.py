@@ -1,6 +1,7 @@
 import cv2
 import matplotlib.pyplot as plt
 from keras.applications.resnet50 import ResNet50
+from keras.applications.resnet50 import preprocess_input, decode_predictions
 from keras.preprocessing import image
 from tqdm import tqdm
 import numpy as np
@@ -26,3 +27,13 @@ def paths_to_tensor(img_paths):
 
     return np.vstack(list_of_tensors)
 
+def ResNet50_predict_labels(img_path):
+    img = preprocess_input(path_to_tensor(img_path))
+
+    return np.argmax(ResNet50_model.predict(img))
+
+def dog_detector(img_path):
+    prediction = ResNet50_predict_labels(img_path)
+
+    return ((prediction <= 268) & (prediction >= 151))
+    
