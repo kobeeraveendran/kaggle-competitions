@@ -88,7 +88,7 @@ for dataset in full_data:
     dataset.loc[dataset['Age'] > 64, 'Age'] = 4
     dataset['Age'] = dataset['Age'].astype(int)
 
-train['CategoricalFare'] = pd.cut(train['Fare'], 4)
+train['CategoricalFare'] = pd.qcut(train['Fare'], 4)
 train['CategoricalAge'] = pd.cut(train['Age'], 5)
 
 train = train.drop(labels = ['CategoricalAge', 'CategoricalFare', 'PassengerId', 'Name', 'SibSp', 'Cabin', 'Ticket'], axis = 1)
@@ -292,3 +292,20 @@ feature_dataframe = pd.DataFrame({'features': cols,
                                   'AdaBoost feature importances': ada_features, 
                                   'Gradient Boosting feature importances': gb_features
                                   })
+
+trace = go.Scatter(
+    y = feature_dataframe['Random Forest feature importances'].values, 
+    x = feature_dataframe['features'].values, 
+    mode = 'markers', 
+    marker = dict(
+        sizemode = 'diameter', 
+        sizeref = 1, 
+        size = 25, 
+        color = feature_dataframe['Random Forest feature importances'].values, 
+        colorscale = 'Portland', 
+        showscale = True
+    ), 
+    text = feature_dataframe['features'].values
+)
+
+data = [trace]
