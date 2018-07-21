@@ -161,3 +161,46 @@ def get_oof(clf, train_data, train_labels, test_data):
     oof_test[:] = oof_test_skf.mean(axis = 0)
 
     return oof_train.reshape(-1, 1), oof_test.reshape(-1, 1)
+
+# classifer parameters
+
+# random forest
+rf_params = {
+    'n_jobs': -1, # use all available cores
+    'n_estimators': 500, # number of clf trees
+    'warm_start': True, 
+    'max_depth': 6, 
+    'min_samples_leaf': 2, 
+    'max_features': 'sqrt', 
+    'verbose': 0
+}
+
+# extra trees
+et_params = {
+    'n_jobs': -1, 
+    'n_estimators': 500, 
+    'max_depth': 8, 
+    'min_samples_leaf': 2, 
+    'verbose': 0
+}
+
+# adaboost
+ada_params = {
+    'n_estimators': 500, 
+    'learning_rate': 0.75
+}
+
+# gradient boosting
+gb_params = {
+    'n_estimators': 500, 
+    'max_depth': 5, 
+    'min_samples_leaf': 2, 
+    'verbose': 0
+}
+
+# SVM
+svc_params = {
+    'kernel': 'linear', 
+    'C': 0.025
+}
+
