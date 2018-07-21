@@ -226,3 +226,10 @@ gradient_boosting = SklearnHelper(clf = GradientBoostingClassifier,
 svm = SklearnHelper(clf = SVC, 
                     seed = SEED, 
                     params = svm_params)
+
+# convert sets from dataframes to np arrays
+train_labels = train['Survived'].ravel()
+train = train.drop(['Survived'], axis = 1)
+train_data = train.values
+test_data = test.values
+
