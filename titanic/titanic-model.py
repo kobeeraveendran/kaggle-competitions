@@ -484,3 +484,21 @@ data = [
     )
 ]
 py.plot(data, filename = 'correlation_heatmap.html')
+
+train_data = np.concatenate((et_oof_train, rf_oof_train, ada_oof_train, gb_oof_train, svm_oof_train), axis = 1)
+test_data = np.concatenate((et_oof_test, rf_oof_test, ada_oof_test, gb_oof_test, svm_oof_test), axis = 1)
+
+# xgboost classifer for level 2 learning
+gbm = xgb.XGBClassifier(
+    n_estimators = 2000, 
+    max_depth = 4, 
+    min_child_weight = 2, 
+    gamma = 0.9, 
+    subsample = 0.8, 
+    colsample_bytree = 0.8, 
+    objective = 'binary:logistic', 
+    nthread = -1, 
+    scale_pos_weight = 1
+).fit(train_data, train_labels)
+
+predictions = gbm.predict(test_data)
