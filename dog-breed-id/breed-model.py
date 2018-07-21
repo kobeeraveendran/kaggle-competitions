@@ -103,3 +103,16 @@ def dog_breed(img_path):
 
 	return dog_classes[np.argmax(predicted_vector)]
 
+def dog_breed_predictor(img_path):
+	breed = dog_breed(img_path)
+	img = cv2.imread(img_path)
+	cv2rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+	plt.imshow(cv2rgb)
+	plt.show()
+
+	if dog_detector(img_path):
+		print('This is a dog and its breed is ' + str(breed))
+	elif face_detector(img_path):
+		print('This is a human but looks like a ' + str(breed))
+	else:
+		print('Unsure of what this is.')
