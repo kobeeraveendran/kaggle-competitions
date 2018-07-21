@@ -6,6 +6,8 @@ from keras.preprocessing import image
 from tqdm import tqdm
 import numpy as np
 
+# dog isolation and detection
+
 face_cascade = cv2.CascadeClassifier('haarcascades/haarcascade_frontalface_alt.xml')
 
 def face_detector(img_path):
@@ -36,4 +38,11 @@ def dog_detector(img_path):
     prediction = ResNet50_predict_labels(img_path)
 
     return ((prediction <= 268) & (prediction >= 151))
-    
+
+# breed prediction CNN
+
+# extract bottleneck features
+bottleneck_features = np.load('bottleneck_features/DogResnet50Data.npz')
+train_DogResnet50 = bottleneck_features['train']
+valid_DogResnet50 = bottleneck_features['valid']
+test_DogResnet50 = bottleneck_features['test']
