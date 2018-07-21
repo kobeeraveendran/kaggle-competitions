@@ -10,6 +10,7 @@ from sklearn.datasets import load_files
 from tqdm import tqdm
 import numpy as np
 import glob
+import random
 
 # dog isolation and detection
 
@@ -59,6 +60,11 @@ valid_files, valid_targets = load_dataset('dataset/dogImages/valid')
 test_files, test_targets = load_dataset('dataset/dogImages/test')
 
 dog_classes = [item[20:-1] for item in sorted(glob.glob('dataset/dogImages/train/*/'))]
+
+# human images
+human_files = np.array(glob.glob('dataset/humanImages/lfw/lfw/*/*'))
+random.seed(8675309)
+random.shuffle(human_files)
 
 # ResNet50 bottleneck features
 bottleneck_features = np.load('bottleneck_features/DogResnet50Data.npz')
@@ -116,3 +122,4 @@ def dog_breed_predictor(img_path):
 		print('This is a human but looks like a ' + str(breed))
 	else:
 		print('Unsure of what this is.')
+
