@@ -429,6 +429,7 @@ py.plot(fig, filename = 'gb_scatter.html')
 feature_dataframe['mean'] = feature_dataframe.mean(axis = 1)
 print(feature_dataframe.head(10))
 
+# plot feature importance means in barplot
 y = feature_dataframe['mean'].values
 x = feature_dataframe['features'].values
 
@@ -458,4 +459,15 @@ layout = go.Layout(
 )
 
 fig = go.Figure(data = data, layout = layout)
-py.iplot(fig, filename = 'bar_feature_importance.html')
+py.plot(fig, filename = 'bar_feature_importance.html')
+
+
+# level 2 predictions using level 1 output
+
+base_predictions_train = pd.DataFrame({
+    'RandomForest': rf_oof_train.ravel(), 
+    'ExtraTrees': et_oof_train.ravel(), 
+    'AdaBoost': ada_oof_train.ravel(), 
+    'GradientBoost': gb_oof_train.ravel()
+})
+base_predictions_train.head()
