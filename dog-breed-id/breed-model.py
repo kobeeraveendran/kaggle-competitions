@@ -5,7 +5,8 @@ from keras.applications.resnet50 import ResNet50
 from keras.applications.resnet50 import preprocess_input, decode_predictions
 from keras.preprocessing import image
 from keras.models import Sequential
-from keras.utils import load_files
+from keras.utils import np_utils
+from sklearn.datasets import load_files
 from tqdm import tqdm
 import numpy as np
 
@@ -48,13 +49,13 @@ def dog_detector(img_path):
 def load_dataset(path):
 	data = load_files(path)
 	dog_files = np.array(data['filenames'])
-	dog_targets = np.utils.to_categorical(np.array(data['target']), 133)
+	dog_targets = np_utils.to_categorical(np.array(data['target']), 133)
 
 	return dog_files, dog_targets
 
-train_files, train_targets = load_dataset('dogImages/train')
-valid_files, valid_targets = load_dataset('dogImages/valid')
-test_files, test_targets = load_dataset('dogImages/test')
+train_files, train_targets = load_dataset('dataset/dogImages/train')
+valid_files, valid_targets = load_dataset('dataset/dogImages/valid')
+test_files, test_targets = load_dataset('dataset/dogImages/test')
 
 # extract bottleneck features
 bottleneck_features = np.load('bottleneck_features/DogResnet50Data.npz')
@@ -82,3 +83,9 @@ checkpoint = keras.callbacks.ModelCheckpoint(
 Resnet50_model.fit(train_DogResnet50, train_targets, 
 	validation_data = (valid_DogResnet50, valid_targets), 
 	epochs = 20, batch_size = 20, callbacks = [checkpoint])
+
+Resnet50_model.load_weights('saved_models/weights.best.ResNet50.hdf5')
+Resnet50_predictions = [np.argmax(Resnet50_model.predict(np.expand_dims(feature, axis = 0))) for feature in test_DogResnet50]
+
+test_acc = np.sum(np.array(Resnet50_predictions) == np.argmax(test_targets, axis = 1)) / len(Resnet50_predictions) * 100
+print('Test Accuracy: ' + str(test_acc))
