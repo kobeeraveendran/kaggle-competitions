@@ -141,7 +141,7 @@ class SklearnHelper(object):
         return self.clf.fit(x, y)
 
     def feature_importances(self, x, y):
-        print(self.clf.fit(x, y).feature_importances_)
+        return self.clf.fit(x, y).feature_importances_
 
 # out-of-fold predictions
 def get_oof(clf, train_data, train_labels, test_data):
@@ -271,3 +271,15 @@ svm_oof_train, svm_oof_test = get_oof(svm,
 print('SVM training complete')
 
 print('Level 1 Training complete')
+
+# display the importances of each feature
+rf_feature = random_forest.feature_importances(train_data, train_labels)
+et_feature = extra_tree.feature_importances(train_data, train_labels)
+ada_feature = adaboost.feature_importances(train_data, train_labels)
+gb_feature = gradient_boosting.feature_importances(train_data, train_labels)
+
+print('Random forest feature importance: ' + str(rf_feature))
+print('Extra trees feature importance: ' + str(et_feature))
+print('AdaBoost feature importance: ' + str(ada_feature))
+print('Gradient boosting feature importance: ' + str(gb_feature))
+
