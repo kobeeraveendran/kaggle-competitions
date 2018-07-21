@@ -116,19 +116,19 @@ graph = sns.pairplot(train[[u'Survived', u'Pclass', u'Sex', u'Age', u'Parch', u'
                      plot_kws = dict(s = 10))
 graph.set(xticklabels = [])
 '''
-plt.show()
+#plt.show()
 
 # useful constants
 train_size = train.shape[0]
 test_size = test.shape[0]
 SEED = 0
 NUM_FOLDS = 5
-kf = KFold(n = train_size, n_folds = NUM_FOLDS, random_state = SEED)
+kf = KFold(train_size ,n_folds = NUM_FOLDS, random_state = SEED)
 
 # helper class for sklearn functions
 class SklearnHelper(object):
     def __init__(self, clf, seed = 0, params = None):
-        params['ranodm_state'] = seed
+        params['random_state'] = seed
         self.clf = clf(**params)
 
     def train(self, train_data, train_labels):
@@ -152,7 +152,7 @@ def get_oof(clf, train_data, train_labels, test_data):
     for i, (train_index, test_index) in enumerate(kf):
         x_tr = train_data[train_index]
         y_tr = train_labels[train_index]
-        x_te = test_data[test_index]
+        x_te = train_data[test_index]
 
         clf.train(x_tr, y_tr)
         oof_train[test_index] = clf.predict(x_te)
