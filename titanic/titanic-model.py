@@ -273,13 +273,22 @@ print('SVM training complete')
 print('Level 1 Training complete')
 
 # display the importances of each feature
-rf_feature = random_forest.feature_importances(train_data, train_labels)
-et_feature = extra_tree.feature_importances(train_data, train_labels)
-ada_feature = adaboost.feature_importances(train_data, train_labels)
-gb_feature = gradient_boosting.feature_importances(train_data, train_labels)
+rf_features = random_forest.feature_importances(train_data, train_labels)
+et_features = extra_tree.feature_importances(train_data, train_labels)
+ada_features = adaboost.feature_importances(train_data, train_labels)
+gb_features = gradient_boosting.feature_importances(train_data, train_labels)
 
-print('Random forest feature importance: ' + str(rf_feature))
-print('Extra trees feature importance: ' + str(et_feature))
-print('AdaBoost feature importance: ' + str(ada_feature))
-print('Gradient boosting feature importance: ' + str(gb_feature))
+print('Random forest feature importance: ' + str(rf_features))
+print('Extra trees feature importance: ' + str(et_features))
+print('AdaBoost feature importance: ' + str(ada_features))
+print('Gradient boosting feature importance: ' + str(gb_features))
 
+# plot feature importances
+cols = train.columns.values
+
+feature_dataframe = pd.DataFrame({'features': cols, 
+                                  'Random Forest feature importances': rf_features, 
+                                  'Extra Trees feature importances': et_features, 
+                                  'AdaBoost feature importances': ada_features, 
+                                  'Gradient Boosting feature importances': gb_features
+                                  })
