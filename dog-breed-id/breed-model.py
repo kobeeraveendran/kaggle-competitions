@@ -9,6 +9,7 @@ from keras.utils import np_utils
 from sklearn.datasets import load_files
 from tqdm import tqdm
 import numpy as np
+import glob
 
 # dog isolation and detection
 
@@ -57,7 +58,9 @@ train_files, train_targets = load_dataset('dataset/dogImages/train')
 valid_files, valid_targets = load_dataset('dataset/dogImages/valid')
 test_files, test_targets = load_dataset('dataset/dogImages/test')
 
-# extract bottleneck features
+dog_classes = [item[20:-1] for item in sorted(glob.glob('dataset/dogImages/train/*/'))]
+
+# ResNet50 bottleneck features
 bottleneck_features = np.load('bottleneck_features/DogResnet50Data.npz')
 train_DogResnet50 = bottleneck_features['train']
 valid_DogResnet50 = bottleneck_features['valid']
@@ -87,5 +90,16 @@ Resnet50_model.fit(train_DogResnet50, train_targets,
 Resnet50_model.load_weights('saved_models/weights.best.ResNet50.hdf5')
 Resnet50_predictions = [np.argmax(Resnet50_model.predict(np.expand_dims(feature, axis = 0))) for feature in test_DogResnet50]
 
+# 
 test_acc = np.sum(np.array(Resnet50_predictions) == np.argmax(test_targets, axis = 1)) / len(Resnet50_predictions) * 100
 print('Test Accuracy: ' + str(test_acc))
+
+# predict dog breed with model
+def dog_breed(img_path):
+	bottleneck_features = ResNet50(weights = 'imagenet', 
+			include_top = False).predict(preprocess_input(path_to_tensor(img_path)))
+
+	predicted_vector = ResNet50_model.predict(bottleneck_features)
+
+	return dog_classes[np.argmax(predicted_vector)]
+
