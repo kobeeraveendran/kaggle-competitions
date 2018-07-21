@@ -318,7 +318,7 @@ layout = go.Layout(
     yaxis = dict(
         title = 'Feature Importance', 
         ticklen = 5, 
-        gridwith = 2
+        gridwidth = 2
     ), 
     showlegend = False
 )
@@ -342,3 +342,18 @@ trace = go.Scatter(
 )
 
 data = [trace]
+
+layout = go.Layout(
+    autosize = True, 
+    title = 'Extra Trees Feature Importance', 
+    hovermode = 'closest', 
+    yaxis = dict(
+        title = 'Feature Importance', 
+        ticklen = 5, 
+        gridwidth = 2
+    ), 
+    showlegend = False
+)
+fig = go.Figure(data = data, layout = layout)
+py.iplot(fig, filename = 'scatter2')
+
