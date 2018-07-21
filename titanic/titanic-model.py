@@ -471,3 +471,16 @@ base_predictions_train = pd.DataFrame({
     'GradientBoost': gb_oof_train.ravel()
 })
 base_predictions_train.head()
+
+# correlation map of level 2
+data = [
+    go.Heatmap(
+        z = base_predictions_train.astype(float).corr().values, 
+        x = base_predictions_train.columns.values, 
+        y = base_predictions_train.columns.values, 
+        colorscale = 'Viridis', 
+        showscale = True, 
+        reversescale = True
+    )
+]
+py.plot(data, filename = 'correlation_heatmap.html')
