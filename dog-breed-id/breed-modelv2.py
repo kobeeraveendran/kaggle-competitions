@@ -91,3 +91,13 @@ valid_vgg_bf = vgg_bottleneck.predict(Xv, batch_size = 32, verbose = 1)
 
 print('VGG train bottleneck features shape: {} size: {:,}'.format(train_vgg_bf.shape, train_vgg_bf.size))
 print('VGG validation bottleneck features shape: {} size: {:,}'.format(valid_vgg_bf.shape, valid_vgg_bf.size))
+
+# logistic regression on vgg bottleneck features
+lr = LogisticRegression(multi_class = 'multinomial', solver = 'lbfgs', random_state = SEED)
+lr.fit(train_vgg_bf, (ytr * range(NUM_CLASSES)).sum(axis = 1))
+
+valid_probs = lr.predict_proba(valid_vgg_bf)
+valid_predictions = lr.predict(valid_vgg_bf)
+
+print('Validation VGG Loss: {}'.format(log_loss(yv, valid_probs)))
+print('Validation VGG Accuracy: {}'.format(accuracy_score((yv * range(NUM_CLASSES)).sum(axis = 1), valid_predictions)))
