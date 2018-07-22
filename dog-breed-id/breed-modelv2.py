@@ -131,3 +131,11 @@ valid_x_bf = xception_bottleneck.predict(Xv, batch_size = 32, verbose = 1)
 print('Xception training bottleneck features shape: {} size: {:,}'.format(train_x_bf.shape, train_x_bf.size))
 print('Xception validation bottleneck features shape: {} size: {:,}'.format(valid_x_bf.shape, valid_x_bf.size))
 
+# logistc regression on Xception bottlenecks
+lr = LogisticRegression(multi_class = 'multinomial', solver = 'lbfgs', random_state = SEED)
+lr.fit(train_x_bf, (ytr * range(NUM_CLASSES)).sum(axis = 1))
+valid_probs = lr.predict_proba(valid_x_bf)
+valid_predictions = lr.predict(valid_x_bf)
+
+print('Validation Xception Loss: {}'.format(log_loss(yv, valid_probs)))
+print('Validation Xception Accuracy: {}'.format(accuracy_score((yv * range(NUM_CLASSES)).sum(axis = 1), valid_predictions)))
