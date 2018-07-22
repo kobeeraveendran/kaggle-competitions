@@ -69,9 +69,12 @@ for i, (img_id, breed) in enumerate(labels.loc[labels['rank'] == 1, ['id', 'bree
 
 plt.show()
 '''
+########################################
+# VGG BOTTLENECK EXTRACTION AND LOGREG #
+########################################
 
 POOLING = 'avg'
-
+'''
 x_train = np.zeros((len(labels), INPUT_SIZE, INPUT_SIZE, 3), dtype = 'float32')
 
 for i, img_id in tqdm(enumerate(labels['id'])):
@@ -101,3 +104,30 @@ valid_predictions = lr.predict(valid_vgg_bf)
 
 print('Validation VGG Loss: {}'.format(log_loss(yv, valid_probs)))
 print('Validation VGG Accuracy: {}'.format(accuracy_score((yv * range(NUM_CLASSES)).sum(axis = 1), valid_predictions)))
+'''
+############################################
+# XCEPTION BOTTLENCK EXTRACTION AND LOGREG #
+############################################
+
+INPUT_SIZE = 299
+x_train = np.zeros((len(labels), INPUT_SIZE, INPUT_SIZE, 3), dtype = 'float32')
+
+for i, img_id in tqdm(enumerate(labels['id'])):
+	img = read_img(img_id, 'train', (INPUT_SIZE, INPUT_SIZE))
+	x = xception.preprocess_input(np.expand_dims(img.copy(), axis = 0))
+	x_train[i] = x
+	
+print('Train Images shape: {} size: {:,}'.format(x_train.shape, x_train.size))
+
+Xtr = x_train[train_index]
+Xv = x_train[valid_index]
+
+print((Xtr.shape, Xv.shape, ytr.shape, yv.shape))
+
+xception_bottleneck = xception.Xception(weights = 'imagenet', include_top = False, pooling = POOLING)
+
+train_x_bf = xception_bottleneck.predict(Xtr, batch_size = 32, verbose = 1)
+valid_x_bf = xception_bottleneck.predict(Xv, batch_size = 32, verbose = 1)
+print('Xception training bottleneck features shape: {} size: {:,}'.format(train_x_bf.shape, train_x_bf.size))
+print('Xception validation bottleneck features shape: {} size: {:,}'.format(valid_x_bf.shape, valid_x_bf.size))
+
