@@ -47,6 +47,7 @@ def read_img(img_id, set_type, size):
 
 model = ResNet50(weights = 'imagenet')
 
+'''
 j = int(np.sqrt(NUM_CLASSES))
 i = int(np.ceil(1. * NUM_CLASSES / j))
 
@@ -67,3 +68,26 @@ for i, (img_id, breed) in enumerate(labels.loc[labels['rank'] == 1, ['id', 'bree
 	ax.axis('off')
 
 plt.show()
+'''
+
+POOLING = 'avg'
+
+x_train = np.zeros((len(labels), INPUT_SIZE, INPUT_SIZE, 3), dtype = 'float32')
+
+for i, img_id in tqdm(enumerate(labels['id'])):
+	img = read_img(img_id, 'train', (INPUT_SIZE, INPUT_SIZE))
+	x = preprocess_input(np.expand_dims(img.copy(), axis = 0))
+	x_train[i] = x
+
+print('Train images shape: {} size: {:,}'.format(x_train.shape, x_train.size))
+
+Xtr = x_train[train_index]
+Xv = x_train[valid_index]
+print((Xtr.shape, Xv.shape, ytr.shape, yv.shape))
+
+vgg_bottleneck = VGG16(weights = 'imagenet', include_top = False, pooling = POOLING)
+train_vgg_bf = vgg_bottleneck.predict(Xtr, batch_size = 32, verbose = 1)
+valid_vgg_bf = vgg_bottleneck.predict(Xv, batch_size = 32, verbose = 1)
+
+print('VGG train bottleneck features shape: {} size: {:,}'.format(train_vgg_bf.shape, train_vgg_bf.size))
+print('VGG validation bottleneck features shape: {} size: {:,}'.format(valid_vgg_bf.shape, valid_vgg_bf.size))
