@@ -185,3 +185,17 @@ valid_predictions = lr.predict(V)
 
 print('Validation on Xception and Inception Loss: {}'.format(log_loss(yv, valid_probs)))
 print('Validation on Xception and Inception Loss: {}'.format(accuracy_score((yv * range(NUM_CLASSES)).sum(axis = 1), valid_predictions)))
+
+# error checking
+
+valid_breeds = (yv * range(NUM_CLASSES)).sum(axis = 1)
+error_index = (valid_breeds != valid_predictions)
+
+for img_id, breed, prediction in zip(labels.loc[valid_index, 'id'].values[error_index], [selected_breed_list[int(b)] for b in valid_predictions[error_index]], [selected_breed_list[int(b)] for b in valid_breeds[error_index]]):
+	fig, ax = plt.subplots(figsize = (5, 5))
+	img = read_img(img_id, 'train', (299, 299))
+	ax.imshow(img / 255.0)
+	ax.text(10, 250, 'Prediction: {}'.format(prediction), color = 'w', backgroundcolor = 'r', alpha = 0.8)
+	ax.axis('off')
+	plt.show()
+
