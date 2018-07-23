@@ -1,3 +1,5 @@
+# see 'beluga's kernel on the dog breed prediction challenge
+
 import numpy as np
 import pandas as pd
 import datetime as dt
@@ -199,3 +201,5 @@ for img_id, breed, prediction in zip(labels.loc[valid_index, 'id'].values[error_
 	ax.axis('off')
 	plt.show()
 
+end = dt.datetime.now()
+print('Total execution (training and evaluation) time: {} s'.format((end - start).seconds))
