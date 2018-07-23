@@ -74,9 +74,9 @@ plt.show()
 ########################################
 
 POOLING = 'avg'
-'''
-x_train = np.zeros((len(labels), INPUT_SIZE, INPUT_SIZE, 3), dtype = 'float32')
 
+x_train = np.zeros((len(labels), INPUT_SIZE, INPUT_SIZE, 3), dtype = 'float32')
+'''
 for i, img_id in tqdm(enumerate(labels['id'])):
 	img = read_img(img_id, 'train', (INPUT_SIZE, INPUT_SIZE))
 	x = preprocess_input(np.expand_dims(img.copy(), axis = 0))
@@ -108,7 +108,7 @@ print('Validation VGG Accuracy: {}'.format(accuracy_score((yv * range(NUM_CLASSE
 ############################################
 # XCEPTION BOTTLENCK EXTRACTION AND LOGREG #
 ############################################
-
+'''
 INPUT_SIZE = 299
 x_train = np.zeros((len(labels), INPUT_SIZE, INPUT_SIZE, 3), dtype = 'float32')
 
@@ -139,3 +139,21 @@ valid_predictions = lr.predict(valid_x_bf)
 
 print('Validation Xception Loss: {}'.format(log_loss(yv, valid_probs)))
 print('Validation Xception Accuracy: {}'.format(accuracy_score((yv * range(NUM_CLASSES)).sum(axis = 1), valid_predictions)))
+'''
+
+#################################################
+# INCEPTION V3 BOTTLENECK EXTRACTION AND LOGREG #
+#################################################
+
+Xtr = x_train[train_index]
+Xv = x_train[valid_index]
+
+print((Xtr.shape, Xv.shape, ytr.shape, yv.shape))
+
+inception_bottleneck = inception_v3.InceptionV3(weights = 'imagenet', include_top = False, pooling = POOLING)
+
+train_i_bf = inception_bottleneck.predict(Xtr, batch_size = 32, verbose = 1)
+valid_i_bf = inception_bottleneck.predict(Xv, batch_size = 32, verbose = 1)
+
+print('InceptionV3 Training bottleneck features shape: {} size: {:,}'.format(train_i_bf.shape, train_i_bf.size))
+print('InceptionV3 Validation bottleneck features shape: {} size: {:,}'.format(valid_i_bf.shape, valid_i_bf.size))
