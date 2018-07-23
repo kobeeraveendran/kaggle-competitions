@@ -76,7 +76,7 @@ plt.show()
 POOLING = 'avg'
 
 x_train = np.zeros((len(labels), INPUT_SIZE, INPUT_SIZE, 3), dtype = 'float32')
-'''
+
 for i, img_id in tqdm(enumerate(labels['id'])):
 	img = read_img(img_id, 'train', (INPUT_SIZE, INPUT_SIZE))
 	x = preprocess_input(np.expand_dims(img.copy(), axis = 0))
@@ -104,11 +104,11 @@ valid_predictions = lr.predict(valid_vgg_bf)
 
 print('Validation VGG Loss: {}'.format(log_loss(yv, valid_probs)))
 print('Validation VGG Accuracy: {}'.format(accuracy_score((yv * range(NUM_CLASSES)).sum(axis = 1), valid_predictions)))
-'''
+
 ############################################
 # XCEPTION BOTTLENCK EXTRACTION AND LOGREG #
 ############################################
-'''
+
 INPUT_SIZE = 299
 x_train = np.zeros((len(labels), INPUT_SIZE, INPUT_SIZE, 3), dtype = 'float32')
 
@@ -139,7 +139,7 @@ valid_predictions = lr.predict(valid_x_bf)
 
 print('Validation Xception Loss: {}'.format(log_loss(yv, valid_probs)))
 print('Validation Xception Accuracy: {}'.format(accuracy_score((yv * range(NUM_CLASSES)).sum(axis = 1), valid_predictions)))
-'''
+
 
 #################################################
 # INCEPTION V3 BOTTLENECK EXTRACTION AND LOGREG #
@@ -168,3 +168,20 @@ valid_predictions = lr.predict(valid_i_bf)
 
 print('Validation InceptionV3 Loss: {}'.format(log_loss(yv, valid_probs)))
 print('Validation InceptionV3 Accuracy: {}'.format(accuracy_score((yv * range(NUM_CLASSES)).sum(axis = 1), valid_predictions)))
+
+# logistic regression on ALL bottleneck features
+
+X = np.hstack([train_x_bf, train_i_bf])
+V = np.hstack([valid_x_bf, valid_i_bf])
+
+print('Full training bottleneck features shape: {} size: {:,}'.format(X.shape, X.size))
+print('Full validation bottleneck features shape: {} size: {:,}'.format(V.shape, V.size))
+
+lr = LogisticRegression(multi_class = 'multinomial', solver = 'lbfgs', random_state = SEED)
+lr.fit(X, (ytr * range(NUM_CLASSES)).sum(axis = 1))
+
+valid_probs = lr.predict_proba(V)
+valid_predictions = lr.predict(V)
+
+print('Validation on Xception and Inception Loss: {}'.format(log_loss(yv, valid_probs)))
+print('Validation on Xception and Inception Loss: {}'.format(accuracy_score((yv * range(NUM_CLASSES)).sum(axis = 1), valid_predictions)))
