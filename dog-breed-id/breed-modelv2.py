@@ -157,3 +157,14 @@ valid_i_bf = inception_bottleneck.predict(Xv, batch_size = 32, verbose = 1)
 
 print('InceptionV3 Training bottleneck features shape: {} size: {:,}'.format(train_i_bf.shape, train_i_bf.size))
 print('InceptionV3 Validation bottleneck features shape: {} size: {:,}'.format(valid_i_bf.shape, valid_i_bf.size))
+
+# logistic regression on inceptionv3 bottlenecks
+
+lr = LogisticRegression(multi_class = 'multinomial', solver = 'lbfgs', random_state = SEED)
+lr.fit(train_i_bf, (ytr * range(NUM_CLASSES)).sum(axis = 1))
+
+valid_probs = lr.predict_proba(valid_i_bf)
+valid_predictions = lr.predict(valid_i_bf)
+
+print('Validation InceptionV3 Loss: {}'.format(log_loss(yv, valid_probs)))
+print('Validation InceptionV3 Accuracy: {}'.format(accuracy_score((yv * range(NUM_CLASSES)).sum(axis = 1), valid_predictions)))
