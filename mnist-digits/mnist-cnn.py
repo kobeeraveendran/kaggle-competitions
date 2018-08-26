@@ -14,6 +14,15 @@ from keras.optimizers import RMSprop
 from keras.preprocessing.image import ImageDataGenerator
 from keras.callbacks import ReduceLROnPlateau
 
+import os
+import keras.backend as K
+
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
+
+config = K.tf.ConfigProto()
+config.gpu_options.allow_growth = True
+session = K.tf.Session(config = config)
+
 np.random.seed(2)
 sns.set(style = 'white')
 
