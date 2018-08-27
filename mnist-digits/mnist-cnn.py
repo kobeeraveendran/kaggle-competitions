@@ -57,8 +57,8 @@ y_train = to_categorical(y_train, num_classes = 10)
 random_seed = 2
 x_train, x_val, y_train, y_val = train_test_split(x_train, y_train, test_size = 0.1, random_state = random_seed)
 
-graph = plt.imshow(x_train[0][:, :, 0])
-plt.show()
+#graph = plt.imshow(x_train[0][:, :, 0])
+#plt.show()
 
 model = Sequential([
     Conv2D(32, (5,5), padding = 'Same', activation = 'relu', input_shape = (28, 28, 1)), 
@@ -85,10 +85,11 @@ learning_rate_reduction = ReduceLROnPlateau(monitor = 'val_acc',
                                             min_lr = 0.00001, 
                                             verbose = 1)
 
-NUM_EPOCHS = 40
+NUM_EPOCHS = 30
 BATCH_SIZE = 86
 
 # data augmentation
+'''
 datagen = ImageDataGenerator(featurewise_center = False, 
                              samplewise_center = False, 
                              featurewise_std_normalization = False, 
@@ -100,17 +101,23 @@ datagen = ImageDataGenerator(featurewise_center = False,
                              height_shift_range = 0.1, 
                              horizontal_flip = False, 
                              vertical_flip = False)
-
-datagen.fit(x_train)
+'''
 
 # fit model
-generator = datagen.flow(x_train, y_train, BATCH_SIZE)
+#generator = datagen.flow(x_train, y_train, BATCH_SIZE)
+history = model.fit(x = x_train, y = y_train, 
+                    epochs = NUM_EPOCHS, 
+                    validation_data = (x_val, y_val), 
+                    callbacks = [learning_rate_reduction], 
+                    verbose = 2)
+'''
 history = model.fit_generator(generator, 
                     epochs = NUM_EPOCHS, 
                     validation_data = (x_val, y_val), 
                     steps_per_epoch = x_train.shape[0] // BATCH_SIZE, 
                     callbacks = [learning_rate_reduction], 
                     verbose = 2)
+'''
 
 fig, ax = plt.subplots(2, 1)
 ax[0].plot(history.history['loss'], color = 'b', label = 'Training loss')
