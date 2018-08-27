@@ -85,7 +85,7 @@ learning_rate_reduction = ReduceLROnPlateau(monitor = 'val_acc',
                                             min_lr = 0.00001, 
                                             verbose = 1)
 
-NUM_EPOCHS = 2
+NUM_EPOCHS = 40
 BATCH_SIZE = 86
 
 # data augmentation
@@ -100,6 +100,8 @@ datagen = ImageDataGenerator(featurewise_center = False,
                              height_shift_range = 0.1, 
                              horizontal_flip = False, 
                              vertical_flip = False)
+
+datagen.fit(x_train)
 
 # fit model
 generator = datagen.flow(x_train, y_train, BATCH_SIZE)
@@ -141,7 +143,17 @@ def plot_confusion_matrix(cm, classes, normalize = False, title = 'Confusion Mat
 
 y_pred = model.predict(x_val)
 y_pred_classes = np.argmax(y_pred, axis = 1)
-y_true =np.argmax(y_val, axis = 1)
+y_true = np.argmax(y_val, axis = 1)
+
 confusion_mtx = confusion_matrix(y_true, y_pred_classes)
 plot_confusion_matrix(confusion_mtx, classes = range(10))
 
+submission = open('submission_cnn.csv', 'w')
+submission.write('ImageId,Label')
+
+predictions = model.predict(test)
+
+for i in range(1, len(predictions) + 1):
+    submission.write('\n{},{}'.format(i, np.argmax(predictions[i - 1])))
+
+submission.close()
